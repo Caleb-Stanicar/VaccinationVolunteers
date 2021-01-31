@@ -1,22 +1,30 @@
 import csv
+import smtplib
+from email.mime.text import MIMEText
+from smtplib import SMTPException
+import yagmail
 
-filename = 'ContactInformation.csv'
 
 data = []
+emailList = []
 
 #initialize all state counts of volunteers to 0
 ALcount = AKcount = AZcount = ARcount = CAcount = COcount = CTcount = DEcount = FLcount = GAcount = HIcount = IDcount = ILcount = INcount = IAcount = KScount = KYcount = LAcount = MEcount = MDcount = MAcount = MIcount = MNcount = MScount = MOcount = MTcount = NEcount = NVcount = NHcount = NJcount = NMcount = NYcount = NCcount = NDcount = OHcount = OKcount = ORcount = PAcount = RIcount = SCcount = SDcount = TNcount = TXcount = UTcount = VTcount = VAcount = WAcount = WVcount = WIcount = WYcount = 0
 
 States = ['Maine' , 'New Hampshire', 'Massachusetts', 'Vermont', 'Rhode Island', 'Pennsylvania', 'New York', 'New Jersey', 'Connecticut', 'Wisconsin', 'Michigan', 'Illinois', 'Indiana', 'Ohio', 'Delaware', 'Maryland','Virginia', 'West Virginia', 'North Carolina', 'South Carolina', 'Georgia', 'Florida', 'Kentucky', 'Tennessee', 'Mississippi', 'Alabama','Oklahoma', 'Texas', 'Arkansas', 'Louisiana', 'North Dakota', 'South Dakota', 'Nebraska', 'Kansas', 'Minnesota', 'Iowa','Missouri', 'Idaho', 'Montana', 'Wyoming', 'Nevada', 'Utah', 'Colorado', 'Arizona', 'New Mexico', 'Alaska', 'Washington', 'Oregon', 'California', 'Hawaii']
 
+filename = 'ContactInformation.csv'
 
 reader = csv.reader(open (filename,'r'), delimiter = ',')
 header = next(reader)
 index = header.index('State you currently reside in')
+index2 = header.index('Username')
 
 for i in reader:
   data.append(i[index])
+  emailList.append(i[index2])
 
+newVolunteerEmail = emailList[len(emailList) - 1]
 
 for i in data:
     if (i == 'Alabama'):
@@ -140,24 +148,30 @@ PacificBracket = [AKcount,WAcount,ORcount,CAcount,HIcount]
 
 newVolunteerState = data[len(data) - 1] #gives last state entered in ContactInformation
 stateIndex = 0
-assignedState = ' '
+
 for y in range(0,len(States)):
     if (newVolunteerState == States[y]):
         stateIndex = y
 
 if (stateIndex <= 5):
-    assignedState = States[min(NorthEastBracket)]
+    assignedState = States[NorthEastBracket.index(min(NorthEastBracket))]
 elif (6 <= stateIndex <= 8):
-    assignedState = States[6 + min(TriStateBracket)]
+    assignedState = States[6 + TriStateBracket.index(min(TriStateBracket))]
 elif (9 <= stateIndex <= 13):
-    assignedState = States[9 + min(EastNorthCentralBracket)]
+    assignedState = States[9 + EastNorthCentralBracket.index(min(EastNorthCentralBracket))]
 elif (14 <= stateIndex <= 21):
-    assignedState = States[14 + min(SouthAtlanticBracket)]
+    assignedState = States[14 + SouthAtlanticBracket.index(min(SouthAtlanticBracket))]
 elif (22 <= stateIndex <= 29):
-    assignedState = States[22 + min(SouthCentralBracket)]
+    assignedState = States[22 + SouthCentralBracket.index(min(SouthCentralBracket))]
 elif (30 <= stateIndex <= 36):
-    assignedState = States[30 + min(WestNorthCentralBracket)]
+    assignedState = States[30 + WestNorthCentralBracket.index(min(WestNorthCentralBracket))]
 elif (37 <= stateIndex <= 44):
-    assignedState = States[37 + min(MountainBracket)]
+    assignedState = States[37 + MountainBracket.index(min(MountainBracket))]
 elif (45 <= stateIndex <= 49):
-    assignedState = States[45 + min(PacificBracket)]
+    assignedState = States[45 + PacificBracket.index(min(PacificBracket))]
+try:
+    yag = yagmail.SMTP(user='covidVolunteerDevfest@gmail.com', password='@volunteers123')
+    yag.send(to= newVolunteerEmail, subject='Volunteer Information', contents='Hello! Thank you for volunteering! We appreciate your time. Your assigned state is ' + assignedState)
+    print("Email sent successfully")
+except:
+    print("Error, email was not sent")
