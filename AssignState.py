@@ -141,7 +141,6 @@ PacificBracket = [AKcount,WAcount,ORcount,CAcount,HIcount]
 newVolunteerState = data[len(data) - 1] #gives last state entered in ContactInformation
 stateIndex = 0
 assignedState = ' '
-print(newVolunteerState)
 for y in range(0,len(States)):
     if (newVolunteerState == States[y]):
         stateIndex = y
