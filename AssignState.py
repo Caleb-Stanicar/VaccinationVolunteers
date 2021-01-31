@@ -162,6 +162,3 @@ elif (37 <= stateIndex <= 44):
     assignedState = States[37 + min(MountainBracket)]
 elif (45 <= stateIndex <= 49):
     assignedState = States[45 + min(PacificBracket)]
-
-
-print(assignedState)
